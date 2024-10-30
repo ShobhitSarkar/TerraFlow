@@ -1,4 +1,4 @@
-# COMS3270P1
+# Terraflow
 
 ## Overview: 
 
@@ -21,7 +21,7 @@ This project implements a point cloud data processor and visualizer for LIDAR te
 
 ```bash
 git clone <repository-url>
-cd coms3270P1
+cd TerraFlow
 make clean   
 make # Build the executable
 ```
@@ -102,4 +102,4 @@ For any questions or clarifications, here's my contact:
 
 Name: Shobhit Sarkar
 
-Email: shobhit@iastate.edu 
+Email: shobhitsarkar0802@gmail.com
