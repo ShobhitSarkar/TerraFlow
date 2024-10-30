@@ -94,7 +94,7 @@ With the `cleaned_AmesState.xyz` dataset, the program generates the following te
 
 Additionally, after simulating the water flow, this is how it looks: 
 
-![alt text](./extras/image.png)
+![alt text](./output.gif)
 
 ## Contact : 
 
