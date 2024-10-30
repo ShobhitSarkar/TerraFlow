@@ -2,23 +2,15 @@
 
 ## Overview: 
 
-This project implements a point cloud data processor and visualizer for LIDAR terrain data. It has two parts: 
-- Part A: Outputs basic point cloud statistics 
-- Part B: Point cloud visualization
+This project implements a point cloud data processor and visualizer for LIDAR terrain data. It processes data to create visualizations of potential water accumulation and runoff patterns.
 
 ## Features:
-
-### Part A: 
-- Reads point cloud data from stdin 
-- Calculates the minimum and maximum heights (also outputs their locations)
-- Computes the average of all data points 
-- Outputs statistics to stdout 
-
-### Part B: 
-- Reads point cloud data (see below for the correct input format)
-- Creates a 800*800 black and white visualization of the points given 
-- Maps the terrain heigts to grayscale values (where, black is the lowest and white is the hightest)
-- Outputs the visualization in a GIF format. 
+- Reads and processes 3D point cloud data 
+- Creates a grayscale visualization of height data 
+- Simulates water flow and accumulation using a cellular automata model 
+- Allows for water evaporation and flow coefficients 
+- Generates visualizations in a GIF format showing both terrain and water accumulation 
+- Generates images according to a specified step size (can be used to create an animation)
 
 ## Requirements
 - GCC compiler
@@ -30,103 +22,79 @@ This project implements a point cloud data processor and visualizer for LIDAR te
 ```bash
 git clone <repository-url>
 cd coms3270P1
+make clean   
+make # Build the executable
 ```
-
-### For part A: 
-```
-git checkout partacomplete
-make clean 
-make stat
-```
-Running these commands should create an executable named `stat`. 
-
-### For part B: 
-```
-git checkout partab 
-make clean 
-make display
-``` 
-Running these commands shoudld create an executable named `display`.
 
 
 ## Running the program
+```bash
+./watershed <ifile> <iter> <iwater> <wcoef> <ecoef> <ofilebase> [seq]
+```
+Where 
+- `ifile`: input point cloud data file 
+- `iter`: number of simulation iterations 
+- `iwater`: initial water amount per cell 
+- `wcoef`: water flow coefficient (0.0-0.2)
+- `ecoef`: evaporation coefficient (0.9-1.0)
+- `ofilebase`: Base filename for output files 
 
-### Part a: 
-```
-./stat < test.xyz
-```
-On doing so, you should see something like this: 
-```
-Minimum height: 284.21 at grid location (445995.5, 4650000.5)
-Maximum height: 304.95 at grid location (445000.5, 4650999.5)
-Average height of all data points: 294.58
+Example: 
+This should generate a series of images to simulate the water flow
+```bash
+./watershed terrain.xyz 100 2.0 0.1 0.95 output 10
 ```
 
-### Part b: 
+This will generate the the final image of the water simulation: 
 ```
-./display < testfile.xyz
+./watershed terrain.xyz 100 2.0 0.1 0.95 output
 ```
-Doing so should create a file called `out.gif` in the current directory which is the grayscale visualization of the terrain provided. 
+
+In the current project, there is a test file called `cleaned_AmesState.xyz` which can help you visualize how the program runs. 
 
 ## Input format 
 
-### Part a: 
+The input should be of the following format: 
+
 ```
+number_of_columns
 x1 y1 height1
 x2 y2 height2
 ...
 ```
-### Part b: 
+where: <br>
+- the first line contains the number of points we're reading (columns)
+- Each subsequent line contains the 3D (x, y and z) coordinates of the points
+
+**Example:**
 ```
-number_of_cols
-x1 y1 height1
-x2 y2 height2
+1001566
+445000.3 4651000.2 304.926666259765625
+445001.3 4651000.2 304.947540283203125
+445002.3 4651000.2 304.952728271484375
+445003.3 4651000.2 304.951354980468750
+445004.3 4651000.2 304.942779541015625
+445005.3 4651000.2 304.946990966796875
+445006.3 4651000.2 304.955963134765625
+445007.3 4651000.2 304.963409423828125
 ...
 ```
-where: 
-- `number_of_cols` total number of points in the dataset 
-- `x,y`: grid coordinates 
-- `height`: elevation at that point 
-
-**Example for part - a:** 
-![alt text](./extras/image-2.png)
-
-**Example for part - b:**
-![alt text](./extras/image.png)
 
 ## Output : 
 
-### Part a: 
-We get an output to the console telling us the following: 
-- Minimum height and it's location 
-- Maximum height and it's location 
-- Average height accross all the points 
-
-### Part b: 
-- Generates an output file called `out.gif`
-- 800*800 pixel grayscale image 
-- Black shows the lowest elevation 
-- White shows the highest elevation 
-- The amounts of black and white represents the varying heights 
+The program generates several types of outputs: 
+- Terrain visualization (grayscale GIF)
+- Water accumulation visualization (blue-shaded GIF)
+- Sequential outputs for animations (when the seq parameter is used)
 
 ### Current output: 
-With the `cleaned_AmesState.xyz` dataset, the program gives the following output : 
+With the `cleaned_AmesState.xyz` dataset, the program generates the following terrain: 
 
 ![alt text](./extras/image-1.png)
 
-(This is the landscape of the Iowa State Bridge crossing Highway 30!)
+Additionally, after simulating the water flow, this is how it looks: 
 
-## Other Implementation Details: 
-- Uses an expanding array similar to Java's arraylist for storing the points 
-- Manages memory using `alloc` and `free`
-
-## Common Issues and their Solutions: 
-1. If the output appears blank: 
-    - Check if the input file has the correct format 
-    - Verify that the points are within close range. This ensures that the image is scaled properly. 
-2. If the visualization is too dark or light: 
-    - Data points might be too close to each other 
-    - Height ranges might be too small 
+![alt text](./extras/image.png)
 
 ## Contact : 
 
@@ -134,6 +102,4 @@ For any questions or clarifications, here's my contact:
 
 Name: Shobhit Sarkar
 
-email : shobhit@iastate.edu 
-___ 
-For branch: :heart:
+Email: shobhit@iastate.edu 
